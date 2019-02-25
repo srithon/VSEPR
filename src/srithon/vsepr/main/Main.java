@@ -46,10 +46,14 @@ public class Main
 		
 		int index = 0;
 		int hide = 0;
+		boolean random = true;
 		
+		if (random)
+			index = randomIndex();
+			
 		while (!line.equalsIgnoreCase("exit"))
 		{
-			hide = -1;
+			hide = 3;
 			
 			while (line.equals(""))
 			{
@@ -59,28 +63,36 @@ public class Main
 
 				String shape = j.nextLine();
 
+				printMissingInfo(index, hide, false);
+				
 				if (vseprGeometry[index].equalsIgnoreCase(shape))
 				{
 					System.out.println("Correct!");
+					index = randomIndex();
 				}
 				else
 				{
 					System.out.println("Sorry, it is actually " + vseprGeometry[index]);
-					index--;
+					
+					if (!random)
+						index--;
 				}
 
-				if (index < vsepr.length - 1)
+				if (!random)
 				{
-					index++;
-				}
-				else
-				{
-					index = 0;
-
-					/*if (hide < 3)
-						hide++;
+					if (index < vsepr.length - 1)
+					{
+						index++;
+					}
 					else
-						hide = 0;*/
+					{
+						index = 0;
+	
+						/*if (hide < 3)
+							hide++;
+						else
+							hide = 0;*/
+					}
 				}
 
 				line = j.nextLine();
@@ -88,7 +100,10 @@ public class Main
 			
 			line = "";
 			index = 0;
-			hide = -1;
+			hide = 3;
+			
+			if (random)
+				index = randomIndex();
 			
 			while (line.equals(""))
 			{
@@ -109,34 +124,46 @@ public class Main
 					catch (InputMismatchException e)
 					{
 						good = false;
+						j.nextLine();
 					}
 				} while (!good);
 
+				printMissingInfo(index, hide, true);
+				
 				if (guessedAngle == vsepr[index][3])
 				{
 					System.out.println("Correct!");
+					
+					if (random)
+						index = randomIndex();
 				}
 				else
 				{
 					System.out.println("Sorry, it is actually " + vsepr[index][3]);
-					index--;
+					
+					if (!random)
+						index--;
 				}
 
-				if (index < vsepr.length - 1)
+				if (!random)
 				{
-					index++;
-				}
-				else
-				{
-					index = 0;
-
-					/*if (hide < 3)
-						hide++;
+					if (index < vsepr.length - 1)
+					{
+						index++;
+					}
 					else
-						hide = 0;*/
+					{
+						index = 0;
+	
+						/*if (hide < 3)
+							hide++;
+						else
+							hide = 0;*/
+					}
 				}
 
 				System.out.println();
+				j.nextLine();
 				line = j.nextLine();
 			}
 		}
@@ -144,9 +171,26 @@ public class Main
 		j.close();
 	}
 	
-	public static final int randomStericNumber()
+	public static final void printMissingInfo(int index, int hide, boolean solveForBA)
 	{
-		return (int)(Math.random() * 5) + 2;
+		if (hide == 0)
+			System.out.println("SN: " + vsepr[index][0]);
+		else if (hide == 1)
+			System.out.println("Bonded Atoms: " + vsepr[index][1]);
+		else if (hide == 2)
+			System.out.println("Lone Pairs: " + vsepr[index][2]);
+		else if (hide == 3)
+		{
+			if (!solveForBA)
+				System.out.println("Bond Angle: " + vsepr[index][3]);
+			else
+				System.out.println("Shape: " + vseprGeometry[index]);
+		}
+	}
+	
+	public static final int randomIndex()
+	{
+		return (int)(Math.random() * vsepr.length);
 	}
 	
 	public static final void printInfo(int index, int hide, boolean solveForBA)
